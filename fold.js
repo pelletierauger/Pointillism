@@ -398,7 +398,7 @@ drawDots = function() {
 
 drawDots = function() {
     vertices = [];
-    let t = drawCount * 5e-5 + 10;
+    let t = (drawCount + 1e3) * 5e-5 + 10;
     let fx = 1, fy = 1, x = 1, y = 1;
     let num = 60000;
     for (let i = 0; i < num; i += 1) {
@@ -421,4 +421,38 @@ drawDots = function() {
     gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(coord);
     gl.drawArrays(gl.POINTS, 0, num);
+}
+
+drawDots = function() {
+    vertices = [];
+    let t = (drawCount + 1e3) * 5e-5 + 10;
+    let fx = 1, fy = 1, x = 1, y = 1;
+    let num = 60000;
+    let count = 0;
+    for (let i = 0; i < num; i += 1) {
+        let g = Math.tan(i * 50 + t * 1e4) + Math.cos(fx * 1e-4 + i * 1e-4);
+        g = g * Math.sin(i * 1e-4) + i * 1e-5 + t * 11.4;
+        x = Math.sin(g * 0.01 * g) * i * 0.00005 * 1.5;
+        y = Math.cos(g * 0.01 * g) * i * 0.00015 * 1.5;
+        x += Math.sin(fx * 1.5) * 0.5 * Math.cos(fx * 0.1);
+        y += Math.sin(fy * 1.5) * 0.5 * Math.cos(fx * 0.1);
+        fx = x;
+        fy = y;
+        // x += Math.cos(t * (map(Math.sin(t * 1e6), -1, 1, 0, 0.2)) * x) * x * 0.1;
+        // y += Math.sin(t * (map(Math.sin(t * 1e6), -1, 1, 0, 0.2)) * y) * y * 0.1;
+        // x *= (10/16);
+        x *= (Math.sin(t * 2e5) + 1 + 0.85); y *=(Math.sin(t * 2e5) + 1 + 0.85);
+        if (dist(0, 0, x / (10/16), y) < 6){
+            vertices.push(x * 0.8 * 0.15, y * 0.8 * 0.15, 0.0);
+            count++;
+        }
+    }
+    // logJavaScriptConsole(count);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+    gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(coord);
+    gl.drawArrays(gl.POINTS, 0, count);
 }
