@@ -456,3 +456,302 @@ drawDots = function() {
     gl.enableVertexAttribArray(coord);
     gl.drawArrays(gl.POINTS, 0, count);
 }
+
+
+
+
+drawCount = 1;
+drawDots = function() {
+    vertices = [];
+    let xOffset = (noise(frameCount * 0.0025) - 0.5) * 0.9;
+    let yOffset = (noise((frameCount + 100) * 0.0025) - 0.5) * 0.9;
+    let t = drawCount * 0.000005 + 2;
+    let fx = 1;
+    let fy = 1;
+    let x = 0;
+    let y = 0;
+    let num = 60000;
+    function ro(a, l, x, y, h) {
+        return {
+            x: x + Math.cos(h + a) * l,
+            y: y + Math.sin(h + a) * l,
+            h: h + a
+        };
+    }
+    let amountRays = 120;
+    let sj = (10 - t) * 1000000;
+    let rayInc = Math.PI * 2 / amountRays;
+    let numV = 0;
+    let metaV = [];
+    let indMetaV = 0;
+    for (let j = sj; j < (Math.PI * 2 + sj); j += rayInc) {
+        let p = {x: 0, y: 0, h: j};
+        let jj = j - sj;
+        metaV[indMetaV] = [];
+        for (let i = 0; i < num / amountRays; i += 1) {
+            let a = 2.9 * Math.tan(i * jj * 0.0125 * 0.75) * 0.5;
+            let l = 0.5 + Math.tan(i * jj * 0.0125 * 0.75) * 1.5;
+            p = ro(a, l, p.x * 0.991, p.y * 0.991, p.h * map(i, 270, num / amountRays, 0, 1));
+            p.x += Math.cos(t * 12e6) * 0.5;
+            p.y += -0.4 + Math.sin(t * 12e6) * 0.5;
+            metaV[indMetaV].push(p.x * 0.35 * 1.5 * 0.005, p.y * 0.8 * 0.005, 0.0);
+            numV += 1;
+        }
+        indMetaV++;
+    }
+    let flatV = [];
+    for (let j = 0; j < metaV[0].length; j += 3) {
+        for (let i = 0; i < metaV.length; i++) {
+            flatV.push(metaV[i][j], metaV[i][j + 1], metaV[i][j + 2]);
+        }
+    }
+    vertices = flatV;
+    // Create an empty buffer object to store the vertex buffer
+    // var vertex_buffer = gl.createBuffer();
+    //Bind appropriate array buffer to it
+    // gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    // Pass the vertex data to the buffer
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    // Unbind the buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    /*======== Associating shaders to buffer objects ========*/
+    // Bind vertex buffer object
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    // Get the attribute location
+    var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+    // Point an attribute to the currently bound VBO
+    gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
+    // Enable the attribute
+    gl.enableVertexAttribArray(coord);
+    /*============= Drawing the primitive ===============*/
+    // // Clear the canvas
+    // gl.clearColor(0.5, 0.5, 0.5, 0.9);
+    // Clear the color buffer bit
+    // gl.clear(gl.COLOR_BUFFER_BIT);
+    // Draw the triangle
+    gl.drawArrays(gl.POINTS, 0, num);
+}
+
+
+
+drawCount = 1;
+drawDots = function() {
+    vertices = [];
+    let xOffset = (noise(frameCount * 0.0025) - 0.5) * 0.9;
+    let yOffset = (noise((frameCount + 100) * 0.0025) - 0.5) * 0.9;
+    let t = drawCount * 0.000005 + 2;
+    let fx = 1;
+    let fy = 1;
+    let x = 0;
+    let y = 0;
+    let num = 60000;
+    function ro(a, l, x, y, h) {
+        return {
+            x: x + Math.cos(h + a) * l,
+            y: y + Math.sin(h + a) * l,
+            h: h + a
+        };
+    }
+    let amountRays = 120;
+    let sj = (10 - t) * 1000000;
+    let rayInc = Math.PI * 2 / amountRays;
+    let numV = 0;
+    let metaV = [];
+    let indMetaV = 0;
+    for (let j = sj; j < (Math.PI * 2 + sj); j += rayInc) {
+        let p = {x: 0, y: 0, h: j};
+        let jj = j - sj;
+        metaV[indMetaV] = [];
+        for (let i = 0; i < num / amountRays; i += 1) {
+            let a = 2.9 * Math.tan(i * 0.1e-1 + jj * 0.25) * 0.5;
+            let l = 0.5 + Math.tan(i * 0.1e-1 + jj * 0.25) * 1.5;
+            p = ro(a, l, p.x * 0.991, p.y * 0.991, p.h * map(i, 270, num / amountRays, 0, 1));
+            p.x += Math.cos(t * 12e6) * 0.5;
+            p.y += -0.4 + Math.sin(t * 12e6) * 0.5;
+            metaV[indMetaV].push(p.x * 0.35 * 1.5 * 0.005, p.y * 0.8 * 0.005, 0.0);
+            numV += 1;
+        }
+        indMetaV++;
+    }
+    let flatV = [];
+    for (let j = 0; j < metaV[0].length; j += 3) {
+        for (let i = 0; i < metaV.length; i++) {
+            flatV.push(metaV[i][j], metaV[i][j + 1], metaV[i][j + 2]);
+        }
+    }
+    vertices = flatV;
+    // Create an empty buffer object to store the vertex buffer
+    // var vertex_buffer = gl.createBuffer();
+    //Bind appropriate array buffer to it
+    // gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    // Pass the vertex data to the buffer
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    // Unbind the buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    /*======== Associating shaders to buffer objects ========*/
+    // Bind vertex buffer object
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    // Get the attribute location
+    var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+    // Point an attribute to the currently bound VBO
+    gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
+    // Enable the attribute
+    gl.enableVertexAttribArray(coord);
+    /*============= Drawing the primitive ===============*/
+    // // Clear the canvas
+    // gl.clearColor(0.5, 0.5, 0.5, 0.9);
+    // Clear the color buffer bit
+    // gl.clear(gl.COLOR_BUFFER_BIT);
+    // Draw the triangle
+    gl.drawArrays(gl.POINTS, 0, num);
+}
+
+
+
+
+drawCount = 1;
+drawDots = function() {
+    vertices = [];
+    let xOffset = (noise(frameCount * 0.0025) - 0.5) * 0.9;
+    let yOffset = (noise((frameCount + 100) * 0.0025) - 0.5) * 0.9;
+    let t = drawCount * 0.000005 + 2;
+    let fx = 1;
+    let fy = 1;
+    let x = 0;
+    let y = 0;
+    let num = 60000;
+    function ro(a, l, x, y, h) {
+        return {
+            x: x + Math.cos(h + a) * l,
+            y: y + Math.sin(h + a) * l,
+            h: h + a
+        };
+    }
+    let amountRays = 120;
+    let sj = (10 - t) * 1000000;
+    let rayInc = Math.PI * 2 / amountRays;
+    let numV = 0;
+    let metaV = [];
+    let indMetaV = 0;
+    for (let j = sj; j < (Math.PI * 2 + sj); j += rayInc) {
+        let p = {x: 0, y: 0, h: j};
+        let jj = j - sj;
+        metaV[indMetaV] = [];
+        for (let i = 0; i < num / amountRays; i += 1) {
+            let a = 2.9 * Math.tan(i * jj * 0.0125 * 0.75) * 0.5 + p.x * 1e-2;
+            let l = 0.5 + Math.tan(i * jj * 0.0125 * 0.75) * 1.5 + p.x * 1e-2;
+            p = ro(a, l, p.x * 0.991, p.y * 0.991, p.h * map(i, 270, num / amountRays, 0, 1));
+            p.x += Math.cos(t * 12e6) * 0.5;
+            p.y += -0.4 + Math.sin(t * 12e6) * 0.5;
+            metaV[indMetaV].push(p.x * 0.35 * 1.5 * 0.005, p.y * 0.8 * 0.005, 0.0);
+            numV += 1;
+        }
+        indMetaV++;
+    }
+    let flatV = [];
+    for (let j = 0; j < metaV[0].length; j += 3) {
+        for (let i = 0; i < metaV.length; i++) {
+            flatV.push(metaV[i][j], metaV[i][j + 1], metaV[i][j + 2]);
+        }
+    }
+    vertices = flatV;
+    // Create an empty buffer object to store the vertex buffer
+    // var vertex_buffer = gl.createBuffer();
+    //Bind appropriate array buffer to it
+    // gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    // Pass the vertex data to the buffer
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    // Unbind the buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    /*======== Associating shaders to buffer objects ========*/
+    // Bind vertex buffer object
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    // Get the attribute location
+    var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+    // Point an attribute to the currently bound VBO
+    gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
+    // Enable the attribute
+    gl.enableVertexAttribArray(coord);
+    /*============= Drawing the primitive ===============*/
+    // // Clear the canvas
+    // gl.clearColor(0.5, 0.5, 0.5, 0.9);
+    // Clear the color buffer bit
+    // gl.clear(gl.COLOR_BUFFER_BIT);
+    // Draw the triangle
+    gl.drawArrays(gl.POINTS, 0, num);
+}
+
+
+drawCount = 1;
+drawDots = function() {
+    vertices = [];
+    let xOffset = (noise(frameCount * 0.0025) - 0.5) * 0.9;
+    let yOffset = (noise((frameCount + 100) * 0.0025) - 0.5) * 0.9;
+    let t = drawCount * 0.0000005 + 2;
+    let fx = 1;
+    let fy = 1;
+    let x = 0;
+    let y = 0;
+    let num = 60000;
+    function ro(a, l, x, y, h) {
+        return {
+            x: x + Math.cos(h + a) * l,
+            y: y + Math.sin(h + a) * l,
+            h: h + a
+        };
+    }
+    let amountRays = 120;
+    let sj = (10 - t) * 1000000;
+    let rayInc = Math.PI * 2 / amountRays;
+    let numV = 0;
+    let metaV = [];
+    let indMetaV = 0;
+    for (let j = sj; j < (Math.PI * 2 + sj); j += rayInc) {
+        let p = {x: 0, y: 0, h: j};
+        let jj = j - sj;
+        metaV[indMetaV] = [];
+        for (let i = 0; i < num / amountRays; i += 1) {
+            let a = 2.9 * Math.tan(i * jj * 0.0125 * 0.25) * 0.5 + p.x * 1e-2;
+            let l = 0.5 + Math.tan(i * jj * 0.0125 * 0.25) * 1.5 + p.x * 1e-2;
+            p = ro(a, l, p.x * 0.991, p.y * 0.991, p.h * map(i, 7, num / amountRays, 0, 1));
+            // p.x += Math.cos(t * 12e6) * 0.5;
+            // p.y += -0.4 + Math.sin(t * 12e6) * 1.5;
+            metaV[indMetaV].push(p.x * 0.35 * 1.5 * 0.005, p.y * 0.8 * 0.005, 0.0);
+            numV += 1;
+        }
+        indMetaV++;
+    }
+    let flatV = [];
+    for (let j = 0; j < metaV[0].length; j += 3) {
+        for (let i = 0; i < metaV.length; i++) {
+            metaV[i][j] += Math.cos(i + t * 2e7) * i * 5e-3 + 0.1;
+            metaV[i][j + 1] += Math.sin(i + t * 2e7) * i * 5e-3 - 0.2;
+            flatV.push(metaV[i][j], metaV[i][j + 1], metaV[i][j + 2]);
+        }
+    }
+    vertices = flatV;
+    // Create an empty buffer object to store the vertex buffer
+    // var vertex_buffer = gl.createBuffer();
+    //Bind appropriate array buffer to it
+    // gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    // Pass the vertex data to the buffer
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    // Unbind the buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    /*======== Associating shaders to buffer objects ========*/
+    // Bind vertex buffer object
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    // Get the attribute location
+    var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+    // Point an attribute to the currently bound VBO
+    gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
+    // Enable the attribute
+    gl.enableVertexAttribArray(coord);
+    /*============= Drawing the primitive ===============*/
+    // // Clear the canvas
+    // gl.clearColor(0.5, 0.5, 0.5, 0.9);
+    // Clear the color buffer bit
+    // gl.clear(gl.COLOR_BUFFER_BIT);
+    // Draw the triangle
+    gl.drawArrays(gl.POINTS, 0, num);
+}
